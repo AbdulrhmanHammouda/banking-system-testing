@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banking System Testing - Final Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            color: #fff;
+        }
+
+        .slide {
+            min-height: 100vh;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-bottom: 3px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .slide:nth-child(odd) {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+        }
+
+        .slide:nth-child(even) {
+            background: linear-gradient(135deg, #16213e, #0f3460);
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            background: linear-gradient(90deg, #00c853, #00e5ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 25px;
+            color: #00e5ff;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin: 20px 0 15px;
+            color: #00c853;
+        }
+
+        p,
+        li {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 30px;
+        }
+
+        li::before {
+            content: "✓ ";
+            color: #00c853;
+        }
+
+        .title-slide {
+            text-align: center;
+        }
+
+        .title-slide h1 {
+            font-size: 4rem;
+        }
+
+        .title-slide p {
+            font-size: 1.5rem;
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #00c853;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        th {
+            background: rgba(0, 229, 255, 0.2);
+            color: #00e5ff;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Slide 1: Title -->
+    <div class="slide title-slide">
+        <h1>🏦 Banking System Testing</h1>
+        <p>CSE341/CSE338/CSE337s - Software Testing</p>
+        <p>Fall 2026</p>
+        <div class="stats-grid" style="margin-top: 60px;">
+            <div class="stat-box">
+                <div class="stat-number">91+</div>
+                <div class="stat-label">Total Tests</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Tests Passing</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">5</div>
+                <div class="stat-label">Testing Types</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 2: Overview -->
+    <div class="slide">
+        <h2>📋 Project Overview</h2>
+        <p>A simplified banking system with:</p>
+        <ul style="margin-top: 30px;">
+            <li>Client onboarding and profile management</li>
+            <li>Deposit, withdrawal, transfer functionalities</li>
+            <li>State-based transitions for account statuses</li>
+            <li>Admin approval workflows</li>
+        </ul>
+        <h3>Testing Techniques Applied:</h3>
+        <ul>
+            <li>Black-Box Testing (Equivalence Partitioning, BVA)</li>
+            <li>White-Box Testing (Control Flow Graphs)</li>
+            <li>State-Based Testing</li>
+            <li>UI Testing</li>
+            <li>Test-Driven Development (TDD)</li>
+        </ul>
+    </div>
+
+    <!-- Slide 3: Black-Box Testing -->
+    <div class="slide">
+        <h2>⬛ Black-Box Testing</h2>
+        <p>Testing based on <strong>specifications only</strong> - no internal code knowledge</p>
+
+        <div class="two-column" style="margin-top: 30px;">
+            <div>
+                <h3>Equivalence Partitioning</h3>
+                <ul>
+                    <li>Valid deposits (positive amounts)</li>
+                    <li>Invalid deposits (zero, negative)</li>
+                    <li>Status-based restrictions</li>
+                </ul>
+            </div>
+            <div>
+                <h3>Boundary Value Analysis</h3>
+                <ul>
+                    <li>Amount = 0 (boundary)</li>
+                    <li>Amount = 0.01 (just above)</li>
+                    <li>Amount = balance (exact)</li>
+                </ul>
+            </div>
+        </div>
+
+        <table style="margin-top: 30px;">
+            <tr>
+                <th>Test ID</th>
+                <th>Input</th>
+                <th>Expected</th>
+            </tr>
+            <tr>
+                <td>BB01</td>
+                <td>deposit(-100)</td>
+                <td>false</td>
+            </tr>
+            <tr>
+                <td>BB02</td>
+                <td>withdraw(50) on Suspended</td>
+                <td>false</td>
+            </tr>
+            <tr>
+                <td>BB03</td>
+                <td>withdraw(500) when balance=100</td>
+                <td>false</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Slide 4: White-Box Testing -->
+    <div class="slide">
+        <h2>☼ White-Box Testing</h2>
+        <p>Testing based on <strong>internal code structure</strong> - Control Flow Graphs</p>
+
+        <h3>Classes Analyzed:</h3>
+        <ul>
+            <li><code>Account.deposit()</code> - 3 branches, 100% covered</li>
+            <li><code>Account.withdraw()</code> - 5 branches, 100% covered</li>
+            <li><code>TransactionProcessor</code> - All decision paths covered</li>
+        </ul>
+
+        <h3>Sample Control Flow Graph:</h3>
+        <pre
+            style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; margin-top: 15px; font-size: 1rem;">
+deposit():
+  START → [status==Closed?]
+            |YES → return false
+            |NO  → [amount<=0?]
+                    |YES → return false  
+                    |NO  → balance += amount; return true
+    </pre>
+    </div>
+
+    <!-- Slide 5: State-Based Testing -->
+    <div class="slide">
+        <h2>🔄 State-Based Testing</h2>
+        <p>Testing account lifecycle transitions</p>
+
+        <div style="text-align: center; margin: 30px 0; font-size: 1.2rem;">
+            <code>Unverified</code> → <code>Verified</code> → <code>Suspended</code> → <code>Closed</code>
+        </div>
+
+        <table>
+            <tr>
+                <th>State</th>
+                <th>Allowed Actions</th>
+                <th>Blocked Actions</th>
+            </tr>
+            <tr>
+                <td>Verified</td>
+                <td>Deposit, Withdraw, Transfer</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>Suspended</td>
+                <td>Deposit, View</td>
+                <td>Withdraw, Transfer</td>
+            </tr>
+            <tr>
+                <td>Closed</td>
+                <td>View only</td>
+                <td>Deposit, Withdraw, Transfer</td>
+            </tr>
+        </table>
+
+        <h3>Tests Include:</h3>
+        <ul>
+            <li>Valid transitions (verify, suspend, reinstate, close)</li>
+            <li>Invalid transitions (e.g., verify a closed account)</li>
+            <li>State-dependent operations</li>
+        </ul>
+    </div>
+
+    <!-- Slide 6: UI Testing -->
+    <div class="slide">
+        <h2>🖥️ UI Testing</h2>
+        <p>Testing user interface behavior via simulation</p>
+
+        <div class="two-column">
+            <div>
+                <h3>What We Tested:</h3>
+                <ul>
+                    <li>Status label rendering</li>
+                    <li>Button enable/disable states</li>
+                    <li>Success/error messages</li>
+                    <li>Input validation</li>
+                </ul>
+            </div>
+            <div>
+                <h3>State-Based UI Rules:</h3>
+                <ul>
+                    <li>Closed → All buttons disabled</li>
+                    <li>Suspended → Withdraw/Transfer disabled</li>
+                    <li>Unverified → Transfer disabled</li>
+                </ul>
+            </div>
+        </div>
+
+        <p style="margin-top: 30px;">
+            <strong>Approach:</strong> Simulated via <code>ClientController</code> class with boolean flags
+            for button states and string messages for notifications.
+        </p>
+    </div>
+
+    <!-- Slide 7: TDD -->
+    <div class="slide">
+        <h2>🧪 Test-Driven Development (TDD)</h2>
+        <p>New feature: <strong>Client Credit Score Check</strong></p>
+
+        <h3>TDD Process:</h3>
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-number" style="color: #f44336;">RED</div>
+                <div class="stat-label">Write failing tests first</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" style="color: #4caf50;">GREEN</div>
+                <div class="stat-label">Write minimal code to pass</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" style="color: #2196f3;">REFACTOR</div>
+                <div class="stat-label">Clean up code</div>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 40px;">Feature Requirements:</h3>
+        <ul>
+            <li>Score ≥ 650 → Eligible for credit</li>
+            <li>Tiers: Excellent (750+), Good (650+), Fair (550+), Poor (below)</li>
+            <li>Max credit limits based on tier</li>
+        </ul>
+    </div>
+
+    <!-- Slide 8: Results -->
+    <div class="slide">
+        <h2>📊 Results Summary</h2>
+
+        <table>
+            <tr>
+                <th>Test Category</th>
+                <th>Tests</th>
+                <th>Status</th>
+            </tr>
+            <tr>
+                <td>Black-Box Tests</td>
+                <td>20</td>
+                <td style="color: #00c853;">✓ All Pass</td>
+            </tr>
+            <tr>
+                <td>White-Box Tests (Account)</td>
+                <td>10</td>
+                <td style="color: #00c853;">✓ All Pass</td>
+            </tr>
+            <tr>
+                <td>White-Box Tests (TransactionProcessor)</td>
+                <td>11</td>
+                <td style="color: #00c853;">✓ All Pass</td>
+            </tr>
+            <tr>
+                <td>State-Based Tests</td>
+                <td>17</td>
+                <td style="color: #00c853;">✓ All Pass</td>
+            </tr>
+            <tr>
+                <td>UI Simulation Tests</td>
+                <td>11</td>
+                <td style="color: #00c853;">✓ All Pass</td>
+            </tr>
+            <tr>
+                <td>TDD Tests</td>
+                <td>14</td>
+                <td style="color: #00c853;">✓ All Pass</td>
+            </tr>
+            <tr>
+                <td>Integration Tests</td>
+                <td>8</td>
+                <td style="color: #00c853;">✓ All Pass</td>
+            </tr>
+            <tr style="background: rgba(0,200,83,0.2);">
+                <td><strong>TOTAL</strong></td>
+                <td><strong>91+</strong></td>
+                <td style="color: #00c853;"><strong>✓ 100% Pass</strong></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Slide 9: Thank You -->
+    <div class="slide title-slide">
+        <h1>Thank You! 🎉</h1>
+        <p style="font-size: 1.5rem; margin-top: 30px;">Questions?</p>
+        <div style="margin-top: 60px; color: rgba(255,255,255,0.5);">
+            <p>Banking System Testing Project</p>
+            <p>CSE341/CSE338/CSE337s - Fall 2026</p>
+        </div>
+    </div>
+
+</body>
+
+</html>
