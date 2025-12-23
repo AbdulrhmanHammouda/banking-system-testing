@@ -5,7 +5,7 @@ package banking;
  */
 public class Account {
     
-    // Status constants
+    // Status constantsD
     public static final String UNVERIFIED = "Unverified";
     public static final String VERIFIED = "Verified";
     public static final String SUSPENDED = "Suspended";

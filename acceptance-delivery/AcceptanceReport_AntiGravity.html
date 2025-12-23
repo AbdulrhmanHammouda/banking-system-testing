@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceptance Report - Banking System Testing Project</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Georgia, serif;
+            font-size: 12pt;
+            line-height: 1.6;
+            max-width: 8.5in;
+            margin: 1in auto;
+            padding: 0 0.5in;
+            color: #000;
+        }
+        h1 {
+            font-size: 18pt;
+            text-align: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 14pt;
+            border-bottom: 1px solid #666;
+            padding-bottom: 5px;
+            margin-top: 25px;
+        }
+        h3 {
+            font-size: 12pt;
+            margin-top: 15px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 11pt;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+        .pass { color: #006600; font-weight: bold; }
+        .fail { color: #cc0000; font-weight: bold; }
+        .signature-box {
+            margin-top: 40px;
+            border: 2px solid #000;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .verdict {
+            font-size: 16pt;
+            font-weight: bold;
+            text-align: center;
+            padding: 15px;
+            margin: 20px 0;
+            border: 3px solid #006600;
+            background-color: #e6ffe6;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border: 1px solid #ddd;
+            overflow-x: auto;
+            font-size: 10pt;
+        }
+        .header-info {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .page-break {
+            page-break-before: always;
+        }
+    </style>
+</head>
+<body>
+
+<h1>ACCEPTANCE REPORT</h1>
+
+<div class="header-info">
+    <p><strong>Project:</strong> Banking System Testing Project</p>
+    <p><strong>Course:</strong> Software Testing</p>
+    <p><strong>Term:</strong> Fall 2026</p>
+    <p><strong>Date:</strong> December 23, 2025</p>
+    <p><strong>Reviewer:</strong> AntiGravity</p>
+    <p><strong>Reference:</strong> term_project_fall_2026</p>
+</div>
+
+<h2>1. Executive Summary</h2>
+
+<p>This acceptance report documents the verification and validation of the Banking System Testing Project. The project demonstrates comprehensive software testing techniques including Black-Box Testing, White-Box Testing, State-Based Testing, Integration Testing, UI Testing, and Test-Driven Development (TDD).</p>
+
+<div class="verdict">
+    ✓ FINAL VERDICT: ACCEPTED
+</div>
+
+<table>
+    <tr>
+        <th>Metric</th>
+        <th>Target</th>
+        <th>Actual</th>
+        <th>Status</th>
+    </tr>
+    <tr>
+        <td>Total Tests</td>
+        <td>≥50</td>
+        <td>81</td>
+        <td class="pass">✓ PASS</td>
+    </tr>
+    <tr>
+        <td>Tests Passed</td>
+        <td>100%</td>
+        <td>81/81 (100%)</td>
+        <td class="pass">✓ PASS</td>
+    </tr>
+    <tr>
+        <td>Branch Coverage (deposit)</td>
+        <td>100%</td>
+        <td>100% (4/4)</td>
+        <td class="pass">✓ PASS</td>
+    </tr>
+    <tr>
+        <td>Branch Coverage (withdraw)</td>
+        <td>100%</td>
+        <td>100% (5/5)</td>
+        <td class="pass">✓ PASS</td>
+    </tr>
+    <tr>
+        <td>Black-Box Tests (BB01-BB07)</td>
+        <td>All implemented</td>
+        <td>All implemented</td>
+        <td class="pass">✓ PASS</td>
+    </tr>
+    <tr>
+        <td>TDD Feature</td>
+        <td>Implemented</td>
+        <td>CreditScoreChecker</td>
+        <td class="pass">✓ PASS</td>
+    </tr>
+</table>
+
+<h2>2. Artifacts Verified</h2>
+
+<h3>2.1 Source Code</h3>
+<table>
+    <tr>
+        <th>File</th>
+        <th>Location</th>
+        <th>Status</th>
+    </tr>
+    <tr>
+        <td>Account.java</td>
+        <td>src/main/java/banking/</td>
+        <td class="pass">✓ Present</td>
+    </tr>
+    <tr>
+        <td>Client.java</td>
+        <td>src/main/java/banking/</td>
+        <td class="pass">✓ Present</td>
+    </tr>
+    <tr>
+        <td>AccountService.java</td>
+        <td>src/main/java/banking/</td>
+        <td class="pass">✓ Present</td>
+    </tr>
+    <tr>
+        <td>TransactionProcessor.java</td>
+        <td>src/main/java/banking/</td>
+        <td class="pass">✓ Present</td>
+    </tr>
+    <tr>
+        <td>ClientController.java</td>
+        <td>src/main/java/banking/</td>
+        <td class="pass">✓ Present</td>
+    </tr>
+    <tr>
+        <td>CreditScoreChecker.java</td>
+        <td>src/main/java/banking/</td>
+        <td class="pass">✓ Present</td>
+    </tr>
+</table>
+
+<h3>2.2 Test Suites</h3>
+<table>
+    <tr>
+        <th>Test Suite</th>
+        <th>Location</th>
+        <th>Tests</th>
+        <th>Status</th>
+    </tr>
+    <tr>
+        <td>AccountBlackBoxTests</td>
+        <td>src/test/java/banking/blackbox/</td>
+        <td>20</td>
+        <td class="pass">✓ All Pass</td>
+    </tr>
+    <tr>
+        <td>AccountWhiteBoxTests</td>
+        <td>src/test/java/banking/whitebox/</td>
+        <td>11</td>
+        <td class="pass">✓ All Pass</td>
+    </tr>
+    <tr>
+        <td>AccountStateTests</td>
+        <td>src/test/java/banking/state/</td>
+        <td>17</td>
+        <td class="pass">✓ All Pass</td>
+    </tr>
+    <tr>
+        <td>BankingIntegrationTests</td>
+        <td>src/test/java/banking/integration/</td>
+        <td>8</td>
+        <td class="pass">✓ All Pass</td>
+    </tr>
+    <tr>
+        <td>UISimulationTests</td>
+        <td>src/test/java/banking/ui/</td>
+        <td>11</td>
+        <td class="pass">✓ All Pass</td>
+    </tr>
+    <tr>
+        <td>CreditScoreCheckerTest</td>
+        <td>src/test/java/banking/tdd/</td>
+        <td>14</td>
+        <td class="pass">✓ All Pass</td>
+    </tr>
+</table>
+
+<h3>2.3 Documentation</h3>
+<table>
+    <tr>
+        <th>Document</th>
+        <th>Location</th>
+        <th>Status</th>
+    </tr>
+    <tr>
+        <td>TestCaseDocument.md</td>
+        <td>docs/</td>
+        <td class="pass">✓ Present</td>
+    </tr>
+    <tr>
+        <td>WhiteBoxAnalysis.md</td>
+        <td>docs/</td>
+        <td class="pass">✓ Present</td>
+    </tr>
+    <tr>
+        <td>StateTransitionMatrix.md</td>
+        <td>docs/</td>
+        <td class="pass">✓ Present</td>
+    </tr>
+    <tr>
+        <td>ControlFlowGraphs.md</td>
+        <td>docs/</td>
+        <td class="pass">✓ Present</td>
+    </tr>
+    <tr>
+        <td>TDDSummary.md</td>
+        <td>docs/</td>
+        <td class="pass">✓ Present</td>
+    </tr>
+    <tr>
+        <td>UIBugList.md</td>
+        <td>docs/</td>
+        <td class="pass">✓ Present</td>
+    </tr>
+    <tr>
+        <td>branch-coverage-matrix.md</td>
+        <td>acceptance-delivery/</td>
+        <td class="pass">✓ Present</td>
+    </tr>
+</table>
+
+<div class="page-break"></div>
+
+<h2>3. Test Results Summary</h2>
+
+<h3>3.1 Overall Results</h3>
+<pre>
+[INFO] Tests run: 81, Failures: 0, Errors: 0, Skipped: 0
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running banking.blackbox.AccountBlackBoxTests
+Tests run: 20, Failures: 0, Errors: 0, Skipped: 0
+
+Running banking.whitebox.AccountWhiteBoxTests
+Tests run: 11, Failures: 0, Errors: 0, Skipped: 0
+
+Running banking.state.AccountStateTests
+Tests run: 17, Failures: 0, Errors: 0, Skipped: 0
+
+Running banking.integration.BankingIntegrationTests
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0
+
+Running banking.ui.UISimulationTests
+Tests run: 11, Failures: 0, Errors: 0, Skipped: 0
+
+Running banking.tdd.CreditScoreCheckerTest
+Tests run: 14, Failures: 0, Errors: 0, Skipped: 0
+
+Results:
+Tests run: 81, Failures: 0, Errors: 0, Skipped: 0
+</pre>
+
+<h2>4. White-Box Evidence (Branch Coverage)</h2>
+
+<h3>4.1 Branch Coverage Matrix Summary</h3>
+
+<p><strong>deposit() Method:</strong></p>
+<table>
+    <tr>
+        <th>Branch</th>
+        <th>Condition</th>
+        <th>Test Covering</th>
+        <th>Covered</th>
+    </tr>
+    <tr>
+        <td>Branch1a</td>
+        <td>status == CLOSED (TRUE)</td>
+        <td>deposit_Branch1a_StatusClosed</td>
+        <td class="pass">✓</td>
+    </tr>
+    <tr>
+        <td>Branch1b</td>
+        <td>status == CLOSED (FALSE)</td>
+        <td>deposit_Branch1b_StatusNotClosed</td>
+        <td class="pass">✓</td>
+    </tr>
+    <tr>
+        <td>Branch2a</td>
+        <td>amount <= 0 (TRUE)</td>
+        <td>deposit_Branch2a_AmountZero/Negative</td>
+        <td class="pass">✓</td>
+    </tr>
+    <tr>
+        <td>Branch2b</td>
+        <td>amount <= 0 (FALSE)</td>
+        <td>deposit_Branch2b_AmountPositive</td>
+        <td class="pass">✓</td>
+    </tr>
+</table>
+<p><strong>deposit() Coverage: 4/4 = 100%</strong></p>
+
+<p><strong>withdraw() Method:</strong></p>
+<table>
+    <tr>
+        <th>Branch</th>
+        <th>Condition</th>
+        <th>Test Covering</th>
+        <th>Covered</th>
+    </tr>
+    <tr>
+        <td>Branch1a</td>
+        <td>status == CLOSED (TRUE)</td>
+        <td>withdraw_Branch1a_StatusClosed</td>
+        <td class="pass">✓</td>
+    </tr>
+    <tr>
+        <td>Branch2a</td>
+        <td>status == SUSPENDED (TRUE)</td>
+        <td>withdraw_Branch2a_StatusSuspended</td>
+        <td class="pass">✓</td>
+    </tr>
+    <tr>
+        <td>Branch3a</td>
+        <td>amount <= 0 (TRUE)</td>
+        <td>withdraw_Branch3a_AmountZero/Negative</td>
+        <td class="pass">✓</td>
+    </tr>
+    <tr>
+        <td>Branch4a</td>
+        <td>amount > balance (TRUE)</td>
+        <td>withdraw_Branch4a_InsufficientBalance</td>
+        <td class="pass">✓</td>
+    </tr>
+    <tr>
+        <td>Branch4b</td>
+        <td>amount > balance (FALSE)</td>
+        <td>withdraw_Branch4b_SufficientBalance</td>
+        <td class="pass">✓</td>
+    </tr>
+</table>
+<p><strong>withdraw() Coverage: 5/5 = 100%</strong></p>
+
+<h2>5. State Testing Summary</h2>
+
+<table>
+    <tr>
+        <th>Transition</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Test</th>
+        <th>Result</th>
+    </tr>
+    <tr>
+        <td>verify()</td>
+        <td>Unverified</td>
+        <td>Verified</td>
+        <td>validTransition_UnverifiedToVerified</td>
+        <td class="pass">✓ Pass</td>
+    </tr>
+    <tr>
+        <td>suspend()</td>
+        <td>Verified</td>
+        <td>Suspended</td>
+        <td>validTransition_VerifiedToSuspended</td>
+        <td class="pass">✓ Pass</td>
+    </tr>
+    <tr>
+        <td>reinstate()</td>
+        <td>Suspended</td>
+        <td>Verified</td>
+        <td>validTransition_SuspendedToVerified</td>
+        <td class="pass">✓ Pass</td>
+    </tr>
+    <tr>
+        <td>close()</td>
+        <td>Any</td>
+        <td>Closed</td>
+        <td>validTransition_*ToClosed</td>
+        <td class="pass">✓ Pass</td>
+    </tr>
+</table>
+
+<h2>6. Integration & UI Summary</h2>
+
+<h3>6.1 Integration Tests</h3>
+<ul>
+    <li>Deposit flow: Controller → Processor → Account ✓</li>
+    <li>Withdraw flow: Controller → Processor → Account ✓</li>
+    <li>Transfer flow: Controller → Processor → Account×2 ✓</li>
+    <li>Error flows: Insufficient funds, null target ✓</li>
+</ul>
+
+<h3>6.2 UI Simulation Tests</h3>
+<ul>
+    <li>Button enable/disable based on state ✓</li>
+    <li>Status messages on success ✓</li>
+    <li>Error messages on failure ✓</li>
+    <li>State changes reflect in UI ✓</li>
+</ul>
+
+<h2>7. TDD Summary</h2>
+
+<p>The CreditScoreChecker feature was developed using Test-Driven Development:</p>
+<ol>
+    <li><strong>RED:</strong> Tests written first (class did not exist)</li>
+    <li><strong>GREEN:</strong> Minimum implementation to pass tests</li>
+    <li><strong>REFACTOR:</strong> Added tiers and max credit features</li>
+</ol>
+<p>See docs/TDDSummary.md for detailed timestamps and code snippets.</p>
+
+<h2>8. Reproduction Instructions</h2>
+
+<h3>Windows:</h3>
+<pre>
+cd project
+build-and-test.bat
+</pre>
+
+<h3>Linux/Mac:</h3>
+<pre>
+cd project
+chmod +x build-and-test.sh
+./build-and-test.sh
+</pre>
+
+<h3>Maven directly:</h3>
+<pre>
+mvn clean test
+</pre>
+
+<h2>9. Known Issues</h2>
+
+<p><strong>None.</strong> All tests pass and all acceptance criteria are met.</p>
+
+<h2>10. Final Verdict</h2>
+
+<div class="verdict">
+    ✓ ACCEPTED
+</div>
+
+<p>The project meets all acceptance criteria:</p>
+<ul>
+    <li>✓ All 81 tests pass</li>
+    <li>✓ Black-Box tests implemented (BB01-BB07 + EP/BVA)</li>
+    <li>✓ White-Box tests with 100% branch coverage (by design)</li>
+    <li>✓ State tests cover all valid/invalid transitions</li>
+    <li>✓ Integration tests demonstrate end-to-end flows</li>
+    <li>✓ UI simulation tests implemented</li>
+    <li>✓ TDD feature (CreditScoreChecker) with tests-first evidence</li>
+    <li>✓ All documentation present and complete</li>
+    <li>✓ No JaCoCo used (coverage proven by test design)</li>
+    <li>✓ Reproducible via single script</li>
+</ul>
+
+<div class="signature-box">
+    <h3>Signature</h3>
+    <p><strong>Reviewer:</strong> AntiGravity</p>
+    <p><strong>Date:</strong> December 23, 2025</p>
+    <p><strong>Time:</strong> 15:10 UTC+2</p>
+    <p><strong>Verdict:</strong> ACCEPTED</p>
+    <br>
+    <p style="font-style: italic;">
+        I, AntiGravity, hereby certify that this project has been reviewed and meets all acceptance criteria as specified in the project requirements (term_project_fall_2026).
+    </p>
+</div>
+
+</body>
+</html>

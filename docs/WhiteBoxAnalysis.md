@@ -2,138 +2,151 @@
 
 ## Overview
 
-White-box testing is based on examining the **internal structure** of the code. Coverage is demonstrated by **test design** that explicitly targets each branch in the control flow.
+White-box testing examines the internal structure of code. Coverage is proven by **test design** that maps each test to a specific branch in the control flow graph (CFG).
 
-> **Note:** Coverage was ensured by test design rather than automated tools.
+> **Note:** Coverage was ensured by test design rather than automated tools (no JaCoCo).
+> Reference: term_project_fall_2026
 
 ---
 
 ## Control Flow Graph: deposit()
 
 ```
-START
-  │
-  ▼
-┌─────────────────────┐
-│ Branch 1:           │
-│ status == CLOSED?   │
-└─────────────────────┘
-     │         │
-    YES       NO
-     │         │
-     ▼         ▼
- [return   ┌─────────────────────┐
-  false]   │ Branch 2:           │
-           │ amount <= 0?        │
-           └─────────────────────┘
-                │         │
-               YES       NO
-                │         │
-                ▼         ▼
-            [return   [balance += amount]
-             false]        │
-                           ▼
-                      [return true]
-                           │
-                           ▼
-                          END
+                    ┌───────────────┐
+                    │     START     │
+                    └───────┬───────┘
+                            │
+                            ▼
+                ┌───────────────────────┐
+                │  Branch1:             │
+                │  status == CLOSED?    │
+                └───────────┬───────────┘
+                     │             │
+                   [YES]         [NO]
+                     │             │
+                     ▼             ▼
+              ┌──────────┐    ┌───────────────────────┐
+              │ Branch1a │    │  Branch2:             │
+              │ return   │    │  amount <= 0?         │
+              │ false    │    └───────────┬───────────┘
+              └──────────┘         │             │
+                                 [YES]         [NO]
+                                   │             │
+                                   ▼             ▼
+                            ┌──────────┐   ┌──────────────┐
+                            │ Branch2a │   │  Branch2b    │
+                            │ return   │   │ balance +=   │
+                            │ false    │   │ amount;      │
+                            └──────────┘   │ return true  │
+                                           └──────────────┘
 ```
 
-### Branches in deposit()
+### Branch List for deposit()
 
-| Branch | Condition | True | False |
-|--------|-----------|------|-------|
-| 1 | status == CLOSED | Return false | Continue |
-| 2 | amount <= 0 | Return false | Add to balance |
+| Branch ID | Condition | Outcome |
+|-----------|-----------|---------|
+| Branch1a | status == CLOSED | TRUE → return false |
+| Branch1b | status == CLOSED | FALSE → continue |
+| Branch2a | amount <= 0 | TRUE → return false |
+| Branch2b | amount <= 0 | FALSE → success |
 
-### Test Coverage
+### Test → Branch Mapping for deposit()
 
-| Test | Branch Covered |
-|------|----------------|
-| `deposit_Branch1_True_Closed` | Branch 1 = TRUE |
-| `deposit_Branch1_False_NotClosed` | Branch 1 = FALSE |
-| `deposit_Branch2_True_Zero` | Branch 2 = TRUE |
-| `deposit_Branch2_True_Negative` | Branch 2 = TRUE |
-| `deposit_Branch2_False_Positive` | Branch 2 = FALSE |
+| Test Method | Branch Covered | Assertion |
+|-------------|----------------|-----------|
+| `deposit_Branch1a_StatusClosed` | Branch1a | Closed account → false |
+| `deposit_Branch1b_StatusNotClosed` | Branch1b | Not closed → continues |
+| `deposit_Branch2a_AmountZero` | Branch2a | Zero amount → false |
+| `deposit_Branch2a_AmountNegative` | Branch2a | Negative → false |
+| `deposit_Branch2b_AmountPositive` | Branch2b | Positive → success |
 
-**Result: 100% branch coverage achieved**
+**Coverage: 4/4 branches = 100%**
 
 ---
 
 ## Control Flow Graph: withdraw()
 
 ```
-START
-  │
-  ▼
-┌─────────────────────┐
-│ Branch 1:           │
-│ status == CLOSED?   │
-└─────────────────────┘
-     │         │
-    YES       NO
-     │         │
-     ▼         ▼
- [return   ┌─────────────────────┐
-  false]   │ Branch 2:           │
-           │ status == SUSPENDED?│
-           └─────────────────────┘
-                │         │
-               YES       NO
-                │         │
-                ▼         ▼
-            [return   ┌─────────────────────┐
-             false]   │ Branch 3:           │
-                      │ amount <= 0?        │
-                      └─────────────────────┘
-                           │         │
-                          YES       NO
-                           │         │
-                           ▼         ▼
-                       [return   ┌─────────────────────┐
-                        false]   │ Branch 4:           │
-                                 │ amount > balance?   │
-                                 └─────────────────────┘
-                                      │         │
-                                     YES       NO
-                                      │         │
-                                      ▼         ▼
-                                  [return   [balance -= amount]
-                                   false]        │
-                                                 ▼
-                                            [return true]
-                                                 │
-                                                 ▼
-                                                END
+                        ┌───────────────┐
+                        │     START     │
+                        └───────┬───────┘
+                                │
+                                ▼
+                    ┌───────────────────────┐
+                    │  Branch1:             │
+                    │  status == CLOSED?    │
+                    └───────────┬───────────┘
+                         │             │
+                       [YES]         [NO]
+                         │             │
+                         ▼             ▼
+                  ┌──────────┐  ┌───────────────────────┐
+                  │ Branch1a │  │  Branch2:             │
+                  │ return   │  │  status == SUSPENDED? │
+                  │ false    │  └───────────┬───────────┘
+                  └──────────┘       │             │
+                                   [YES]         [NO]
+                                     │             │
+                                     ▼             ▼
+                              ┌──────────┐  ┌───────────────────────┐
+                              │ Branch2a │  │  Branch3:             │
+                              │ return   │  │  amount <= 0?         │
+                              │ false    │  └───────────┬───────────┘
+                              └──────────┘       │             │
+                                               [YES]         [NO]
+                                                 │             │
+                                                 ▼             ▼
+                                          ┌──────────┐  ┌───────────────────────┐
+                                          │ Branch3a │  │  Branch4:             │
+                                          │ return   │  │  amount > balance?    │
+                                          │ false    │  └───────────┬───────────┘
+                                          └──────────┘       │             │
+                                                           [YES]         [NO]
+                                                             │             │
+                                                             ▼             ▼
+                                                      ┌──────────┐  ┌──────────────┐
+                                                      │ Branch4a │  │  Branch4b    │
+                                                      │ return   │  │ balance -=   │
+                                                      │ false    │  │ amount;      │
+                                                      └──────────┘  │ return true  │
+                                                                    └──────────────┘
 ```
 
-### Branches in withdraw()
+### Branch List for withdraw()
 
-| Branch | Condition | True | False |
-|--------|-----------|------|-------|
-| 1 | status == CLOSED | Return false | Continue |
-| 2 | status == SUSPENDED | Return false | Continue |
-| 3 | amount <= 0 | Return false | Continue |
-| 4 | amount > balance | Return false | Subtract |
+| Branch ID | Condition | Outcome |
+|-----------|-----------|---------|
+| Branch1a | status == CLOSED | TRUE → return false |
+| Branch2a | status == SUSPENDED | TRUE → return false |
+| Branch3a | amount <= 0 | TRUE → return false |
+| Branch4a | amount > balance | TRUE → return false |
+| Branch4b | amount > balance | FALSE → success |
 
-### Test Coverage
+### Test → Branch Mapping for withdraw()
 
-| Test | Branch Covered |
-|------|----------------|
-| `withdraw_Branch1_True_Closed` | Branch 1 = TRUE |
-| `withdraw_Branch2_True_Suspended` | Branch 2 = TRUE |
-| `withdraw_Branch3_True_Zero` | Branch 3 = TRUE |
-| `withdraw_Branch3_True_Negative` | Branch 3 = TRUE |
-| `withdraw_Branch4_True_Overdraft` | Branch 4 = TRUE |
-| `withdraw_AllFalse_Success` | All branches FALSE |
+| Test Method | Branch Covered | Assertion |
+|-------------|----------------|-----------|
+| `withdraw_Branch1a_StatusClosed` | Branch1a | Closed → false |
+| `withdraw_Branch2a_StatusSuspended` | Branch2a | Suspended → false |
+| `withdraw_Branch3a_AmountZero` | Branch3a | Zero → false |
+| `withdraw_Branch3a_AmountNegative` | Branch3a | Negative → false |
+| `withdraw_Branch4a_InsufficientBalance` | Branch4a | Overdraft → false |
+| `withdraw_Branch4b_SufficientBalance` | Branch4b | Valid → success |
 
-**Result: 100% branch coverage achieved**
+**Coverage: 5/5 branches = 100%**
 
 ---
 
-## Summary
+## Branch Coverage Summary
 
-- All branches in `deposit()` are covered by tests
-- All branches in `withdraw()` are covered by tests
-- Each test is clearly labeled with the branch it covers
-- Coverage is proven by **logical analysis**, not by tools
+| Method | Total Branches | Branches Covered | Coverage % |
+|--------|----------------|------------------|------------|
+| deposit() | 4 | 4 | **100%** |
+| withdraw() | 5 | 5 | **100%** |
+| **TOTAL** | **9** | **9** | **100%** |
+
+---
+
+## Conclusion
+
+All branches in the critical `deposit()` and `withdraw()` methods are covered by tests. Coverage is proven by explicit test-to-branch mapping documented in this analysis.
