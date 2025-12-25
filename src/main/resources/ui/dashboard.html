@@ -285,31 +285,41 @@
             setTimeout(() => notif.className = 'notification', 3000);
         }
 
-        function updateButtonStates() {
-            const deposit = document.getElementById('btnDeposit');
-            const withdraw = document.getElementById('btnWithdraw');
-            const transfer = document.getElementById('btnTransfer');
+function updateButtonStates() {
+    const deposit = document.getElementById('btnDeposit');
+    const withdraw = document.getElementById('btnWithdraw');
+    const transfer = document.getElementById('btnTransfer');
+    const statement = document.getElementById('btnStatement');
 
-            // Apply rules based on status
-            if (status === 'Closed') {
-                deposit.disabled = true;
-                withdraw.disabled = true;
-                transfer.disabled = true;
-            } else if (status === 'Suspended') {
-                deposit.disabled = false;
-                withdraw.disabled = true;
-                transfer.disabled = true;
-            } else {
-                deposit.disabled = false;
-                withdraw.disabled = false;
-                transfer.disabled = (status === 'Unverified');
-            }
+    if (status === 'Closed') {
+        deposit.disabled = true;
+        withdraw.disabled = true;
+        transfer.disabled = true;
+        statement.disabled = true;
+    } 
+    else if (status === 'Suspended') {
+        deposit.disabled = false;
+        withdraw.disabled = true;
+        transfer.disabled = true;
+        statement.disabled = false;
+    } 
+    else if (status === 'Unverified') {
+        deposit.disabled = true;
+        withdraw.disabled = true;
+        transfer.disabled = true;
+        statement.disabled = true;
+    } 
+    else { // Verified
+        deposit.disabled = false;
+        withdraw.disabled = false;
+        transfer.disabled = false;
+        statement.disabled = false;
+    }
 
-            // Update badge
-            const badge = document.getElementById('statusBadge');
-            badge.textContent = status;
-            badge.className = 'status-badge status-' + status.toLowerCase();
-        }
+    const badge = document.getElementById('statusBadge');
+    badge.textContent = status;
+    badge.className = 'status-badge status-' + status.toLowerCase();
+}
 
         function deposit() {
             if (status === 'Closed') {
@@ -368,9 +378,12 @@
         }
 
         function viewStatement() {
+            if (status !== 'Verified') {
+                showNotification('Cannot view statement: Account not verified', 'error');
+                return;
+            }
             showNotification('Statement generated! (Demo)', 'success');
         }
-
         function changeStatus() {
             status = document.getElementById('statusSelect').value;
             updateButtonStates();
