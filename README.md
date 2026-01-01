@@ -7,6 +7,9 @@ A comprehensive Java banking system demonstrating software testing techniques.
 ---
 
 ## Quick Start
+##run the backend server Apache Tomcat using this command
+ mvn clean package cargo:run
+
 
 ### Windows
 ```cmd
