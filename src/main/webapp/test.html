@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Servlet Test</title>
+</head>
+<body>
+    <h1>Servlet Test Page</h1>
+    <button onclick="testGet()">Test GET</button>
+    <button onclick="testPost()">Test POST</button>
+    <button onclick="testCORS()">Test CORS</button>
+    <button onclick="testDashboard()">Test Dashboard</button>
+    <div id="result"></div>
+
+    <script>
+const baseUrl = 'transaction';
+
+function testGet() {
+    console.log('Testing GET request...');
+    fetch(baseUrl)
+        .then(res => {
+            document.getElementById('result').innerHTML =
+                'GET Response: ' + res.status + ' ' + res.statusText;
+            return res.json();
+        })
+        .then(data => {
+            document.getElementById('result').innerHTML +=
+                '<br>JSON: ' + JSON.stringify(data, null, 2);
+        })
+        .catch(err => {
+            document.getElementById('result').innerHTML = 'Error: ' + err;
+        });
+}
+
+function testPost() {
+    console.log('Testing POST request...');
+    fetch(baseUrl, {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json'
+        },
+        body: 'action=deposit&amount=100'
+    })
+    .then(res => {
+        document.getElementById('result').innerHTML =
+            'POST Response: ' + res.status + ' ' + res.statusText;
+        return res.json();
+    })
+    .then(data => {
+        document.getElementById('result').innerHTML +=
+            '<br>JSON: ' + JSON.stringify(data, null, 2);
+    })
+    .catch(err => {
+        document.getElementById('result').innerHTML = 'Error: ' + err;
+    });
+}
+
+function testCORS() {
+    console.log('Testing CORS...');
+    fetch(baseUrl, {
+        method: 'OPTIONS',
+        headers: {
+            'Access-Control-Request-Method': 'POST',
+            'Access-Control-Request-Headers': 'Content-Type'
+        }
+    })
+    .then(res => {
+        document.getElementById('result').innerHTML =
+            'CORS Response: ' + res.status + ' ' + res.statusText;
+        console.log('CORS headers:', res.headers);
+    })
+    .catch(err => {
+        document.getElementById('result').innerHTML = 'CORS Error: ' + err;
+    });
+}
+
+function testDashboard() {
+    console.log('Testing dashboard.html...');
+    window.location.href = '/banking-system/dashboard.html';
+}
+
+    </script>
+</body>
+</html>

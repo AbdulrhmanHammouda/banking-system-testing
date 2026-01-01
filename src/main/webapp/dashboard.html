@@ -270,129 +270,105 @@
         </div>
     </div>
 
-    <script>
-        let balance = 1000.00;
-        let status = "Verified";
-
-        function updateBalance() {
-            document.getElementById('balanceAmount').textContent = '$' + balance.toFixed(2);
-        }
-
-        function showNotification(message, type) {
-            const notif = document.getElementById('notification');
-            notif.textContent = message;
-            notif.className = 'notification ' + type;
-            setTimeout(() => notif.className = 'notification', 3000);
-        }
-
-function updateButtonStates() {
-    const deposit = document.getElementById('btnDeposit');
-    const withdraw = document.getElementById('btnWithdraw');
-    const transfer = document.getElementById('btnTransfer');
-    const statement = document.getElementById('btnStatement');
-
-    if (status === 'Closed') {
-        deposit.disabled = true;
-        withdraw.disabled = true;
-        transfer.disabled = true;
-        statement.disabled = true;
-    } 
-    else if (status === 'Suspended') {
-        deposit.disabled = false;
-        withdraw.disabled = true;
-        transfer.disabled = true;
-        statement.disabled = false;
-    } 
-    else if (status === 'Unverified') {
-        deposit.disabled = true;
-        withdraw.disabled = true;
-        transfer.disabled = true;
-        statement.disabled = true;
-    } 
-    else { // Verified
-        deposit.disabled = false;
-        withdraw.disabled = false;
-        transfer.disabled = false;
-        statement.disabled = false;
-    }
-
-    const badge = document.getElementById('statusBadge');
-    badge.textContent = status;
-    badge.className = 'status-badge status-' + status.toLowerCase();
+<script>
+    baseurl = 'transaction';
+function showNotification(message, type) {
+    const notif = document.getElementById('notification');
+    notif.textContent = message;
+    notif.className = 'notification ' + type;
+    setTimeout(() => notif.className = 'notification', 3000);
 }
 
-        function deposit() {
-            if (status === 'Closed') {
-                showNotification('Cannot deposit: Account is closed', 'error');
-                return;
-            }
-            const amount = parseFloat(document.getElementById('amountInput').value);
-            if (isNaN(amount) || amount <= 0) {
-                showNotification('Invalid amount', 'error');
-                return;
-            }
-            balance += amount;
-            updateBalance();
-            showNotification('Deposited $' + amount.toFixed(2) + ' successfully!', 'success');
-            document.getElementById('amountInput').value = '';
-        }
+function updateUI(data) {
+    console.log('Received data:', data);
+    
+    if (data.balance !== undefined) {
+        document.getElementById('balanceAmount').textContent =
+            '$' + data.balance.toFixed(2);
+    }
 
-        function withdraw() {
-            if (status === 'Closed' || status === 'Suspended') {
-                showNotification('Cannot withdraw: Account is ' + status.toLowerCase(), 'error');
-                return;
-            }
-            const amount = parseFloat(document.getElementById('amountInput').value);
-            if (isNaN(amount) || amount <= 0) {
-                showNotification('Invalid amount', 'error');
-                return;
-            }
-            if (amount > balance) {
-                showNotification('Insufficient funds', 'error');
-                return;
-            }
-            balance -= amount;
-            updateBalance();
-            showNotification('Withdrew $' + amount.toFixed(2) + ' successfully!', 'success');
-            document.getElementById('amountInput').value = '';
-        }
+    if (data.depositEnabled !== undefined) {
+        document.getElementById('btnDeposit').disabled = !data.depositEnabled;
+    }
+    if (data.withdrawEnabled !== undefined) {
+        document.getElementById('btnWithdraw').disabled = !data.withdrawEnabled;
+    }
+    if (data.transferEnabled !== undefined) {
+        document.getElementById('btnTransfer').disabled = !data.transferEnabled;
+    }
 
-        function transfer() {
-            if (status !== 'Verified') {
-                showNotification('Cannot transfer: Account must be verified', 'error');
-                return;
-            }
-            const amount = parseFloat(document.getElementById('amountInput').value);
-            if (isNaN(amount) || amount <= 0) {
-                showNotification('Invalid amount', 'error');
-                return;
-            }
-            if (amount > balance) {
-                showNotification('Insufficient funds', 'error');
-                return;
-            }
-            balance -= amount;
-            updateBalance();
-            showNotification('Transferred $' + amount.toFixed(2) + ' successfully!', 'success');
-            document.getElementById('amountInput').value = '';
-        }
+    if (data.errorMessage) {
+        showNotification(data.errorMessage, 'error');
+    } else if (data.statusMessage) {
+        showNotification(data.statusMessage, 'success');
+    }
+}
 
-        function viewStatement() {
-            if (status !== 'Verified') {
-                showNotification('Cannot view statement: Account not verified', 'error');
-                return;
-            }
-            showNotification('Statement generated! (Demo)', 'success');
-        }
-        function changeStatus() {
-            status = document.getElementById('statusSelect').value;
-            updateButtonStates();
-            showNotification('Status changed to ' + status, 'success');
-        }
+function sendAction(action) {
+    const amount = document.getElementById('amountInput').value;
 
-        // Initialize
-        updateButtonStates();
-    </script>
+    console.log('Sending action:', action, 'amount:', amount);
+
+    fetch(baseurl, {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json'
+        },
+        body: `action=${action}&amount=${amount}`
+    })
+    .then(res => {
+        console.log('Response status:', res.status, res.statusText);
+        console.log('Response headers:', res.headers);
+        
+        if (!res.ok) {
+            throw new Error('HTTP error ' + res.status + ': ' + res.statusText);
+        }
+        
+        return res.json();
+    })
+    .then(data => {
+        console.log('Received data:', data);
+        updateUI(data);
+        document.getElementById('amountInput').value = '';
+    })
+    .catch((error) => {
+        console.error('Fetch error:', error);
+        showNotification('Server error: ' + error.message, 'error');
+    });
+}
+
+function deposit()  { sendAction('deposit'); }
+function withdraw() { sendAction('withdraw'); }
+function transfer() { sendAction('transfer'); }
+
+// On page load, fetch initial state
+window.addEventListener('DOMContentLoaded', () => {
+    console.log('Page loaded, fetching initial state...');
+    
+    fetch(baseurl)
+        .then(res => {
+            console.log('Initial GET response status:', res.status, res.statusText);
+            console.log('Initial GET response headers:', res.headers);
+            
+            if (!res.ok) {
+                throw new Error('HTTP error ' + res.status + ': ' + res.statusText);
+            }
+            return res.json();
+        })
+        .then(data => {
+            console.log('Initial data received:', data);
+            updateUI(data);
+        })
+        .catch((error) => {
+            console.error('Initial load error:', error);
+            showNotification('Failed to load account data: ' + error.message, 'error');
+        });
+});
+
+</script>
+
+
 </body>
 
 </html>
