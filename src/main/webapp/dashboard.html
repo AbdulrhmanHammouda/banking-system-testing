@@ -278,6 +278,25 @@ function showNotification(message, type) {
     notif.className = 'notification ' + type;
     setTimeout(() => notif.className = 'notification', 3000);
 }
+function applyStatusRules() {
+    const canDeposit =
+        currentStatus === 'Verified' || currentStatus === 'Suspended';
+
+    const canWithdraw = currentStatus === 'Verified';
+    const canTransfer = currentStatus === 'Verified';
+
+    document.getElementById('btnDeposit').disabled  = !canDeposit;
+    document.getElementById('btnWithdraw').disabled = !canWithdraw;
+    document.getElementById('btnTransfer').disabled = !canTransfer;
+    document.getElementById('btnStatement').disabled = false;
+
+    if (currentStatus !== 'Verified') {
+        showNotification(
+            `Account status changed to ${currentStatus}. Actions are restricted.`,
+            'error'
+        );
+    }
+}
 
 function updateUI(data) {
     console.log('Received data:', data);
@@ -305,39 +324,47 @@ function updateUI(data) {
 }
 
 function sendAction(action) {
-    const amount = document.getElementById('amountInput').value;
 
-    console.log('Sending action:', action, 'amount:', amount);
+    if (action === 'deposit' &&
+        !(currentStatus === 'Verified' || currentStatus === 'Suspended')) {
+        showNotification(
+            `Deposit not allowed: account status is ${currentStatus}.`,
+            'error'
+        );
+        return;
+    }
+
+    if ((action === 'withdraw' || action === 'transfer') &&
+        currentStatus !== 'Verified') {
+        showNotification(
+            `Action blocked: account status is ${currentStatus}.`,
+            'error'
+        );
+        return;
+    }
+
+    const amount = document.getElementById('amountInput').value;
 
     fetch(baseurl, {
         method: 'POST',
-        headers: { 
+        headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': 'application/json'
         },
         body: `action=${action}&amount=${amount}`
     })
     .then(res => {
-        console.log('Response status:', res.status, res.statusText);
-        console.log('Response headers:', res.headers);
-        
-        if (!res.ok) {
-            throw new Error('HTTP error ' + res.status + ': ' + res.statusText);
-        }
-        
+        if (!res.ok) throw new Error('HTTP ' + res.status);
         return res.json();
     })
     .then(data => {
-        console.log('Received data:', data);
         updateUI(data);
         document.getElementById('amountInput').value = '';
     })
-    .catch((error) => {
-        console.error('Fetch error:', error);
-        showNotification('Server error: ' + error.message, 'error');
+    .catch(err => {
+        showNotification('Server error: ' + err.message, 'error');
     });
 }
-
 function deposit()  { sendAction('deposit'); }
 function withdraw() { sendAction('withdraw'); }
 function transfer() { sendAction('transfer'); }
